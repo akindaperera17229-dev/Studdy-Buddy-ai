@@ -1,27 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Studdy Buddy</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="/static/style.css">
+    <!-- Marked.js for Markdown -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
+<!-- Animated background blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
 <div class="chat-container">
 
     <div class="chat-header">
-        🤖 Studdy Buddy
+        <div class="header-left">
+            <i class="ph-fill ph-student"></i>
+            <h2>Studdy Buddy</h2>
+        </div>
+        
+        <div class="header-right">
+            <!-- Pomodoro Timer -->
+            <div class="pomodoro-container" id="pomodoro-timer" title="Focus Timer (25 min)">
+                <i class="ph ph-timer"></i>
+                <span id="time-display">25:00</span>
+            </div>
 
-        <button onclick="toggleDark()" style="float:right;">
-            🌙
+            <!-- Export Chat -->
+            <button class="icon-btn" onclick="exportChat()" title="Export Notes">
+                <i class="ph ph-download-simple"></i>
+            </button>
+
+            <!-- Settings / Theme -->
+            <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">
+                <i class="ph ph-moon" id="theme-icon"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Quick Prompts Chips -->
+    <div class="prompts-wrapper">
+        <button class="prompt-chip" onclick="usePrompt('Can you summarize [topic] simply?')">
+            <i class="ph ph-text-align-left"></i> Summarize
+        </button>
+        <button class="prompt-chip" onclick="usePrompt('Explain [topic] to me like I am 5 years old.')">
+            <i class="ph ph-baby"></i> Explain like I'm 5
+        </button>
+        <button class="prompt-chip" onclick="usePrompt('Generate a quick 3-question quiz on [topic].')">
+            <i class="ph ph-exam"></i> Quiz Me
+        </button>
+        <button class="prompt-chip" onclick="usePrompt('Can you suggest a study plan or techniques for [topic]?')">
+            <i class="ph ph-books"></i> Study Plan
         </button>
     </div>
 
-    <div id="chat-box" class="chat-box"></div>
+    <div id="chat-box" class="chat-box">
+        <!-- Initial welcome message -->
+        <div class="message bot">
+            <div class="msg-content">Hello! I'm Studdy Buddy. What are we studying today? 🚀</div>
+        </div>
+    </div>
 
     <div class="input-area">
-        <input id="question" placeholder="Ask something..." />
-        <button onclick="askAI()">Send</button>
+        <textarea id="question" placeholder="Ask a question..." rows="1" oninput="autoResize(this)" onkeydown="checkEnter(event)"></textarea>
+        
+        <div class="input-actions">
+            <!-- Voice Input Button -->
+            <button class="icon-btn voice-btn" id="voice-btn" onclick="toggleVoice()" title="Speak your question">
+                <i class="ph ph-microphone"></i>
+            </button>
+
+            <button class="send-btn" onclick="askAI()" title="Send Message">
+                <i class="ph-fill ph-paper-plane-tilt"></i>
+            </button>
+        </div>
     </div>
 
 </div>
