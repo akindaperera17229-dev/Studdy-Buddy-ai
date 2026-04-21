@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Studdy Buddy</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+<div class="chat-container">
+
+    <div class="chat-header">
+        🤖 Studdy Buddy
+
+        <button onclick="toggleDark()" style="float:right;">
+            🌙
+        </button>
+    </div>
+
+    <div id="chat-box" class="chat-box"></div>
+
+    <div class="input-area">
+        <input id="question" placeholder="Ask something..." />
+        <button onclick="askAI()">Send</button>
+    </div>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
