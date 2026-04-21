@@ -191,6 +191,9 @@ async function askAI() {
         chatHistoryForExport += `**Studdy Buddy:** ${answer}\n\n---\n\n`;
         
         typeMessage(answer);
+        
+        // Pet reacts to successful reply
+        animatePetReaction("Here you go!");
 
     } catch (err) {
         typingUI.remove();
@@ -271,4 +274,86 @@ function typeMessage(text) {
     } else {
         typeChar();
     }
+}
+
+// === Pet Animations ===
+function animatePetReaction(text) {
+    const speech = document.getElementById("pet-speech");
+    if(speech) {
+        speech.innerText = text;
+        speech.style.opacity = "1";
+        speech.style.transform = "translateY(0) scale(1)";
+        setTimeout(() => {
+            speech.style.opacity = "";
+            speech.style.transform = "";
+        }, 3000);
+    }
+}
+
+// Draggable and Clickable Pet Logic
+const petContainer = document.getElementById("pet-container");
+if (petContainer) {
+    const phrases = ["You got this!", "Keep studying!", "I'm your buddy!", "Stay focused! 🚀", "Boop!", "I love learning!"];
+    
+    let isDragging = false;
+    let hasDragged = false;
+    let offsetX, offsetY;
+
+    function startDrag(e) {
+        if (e.target.closest('.pet-speech-bubble')) return; // ignore speech bubble clicks
+        
+        let clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        let clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+        
+        let rect = petContainer.getBoundingClientRect();
+        offsetX = clientX - rect.left;
+        offsetY = clientY - rect.top;
+        
+        isDragging = true;
+        hasDragged = false;
+        petContainer.style.transition = 'none';
+        
+        document.addEventListener('mousemove', drag, {passive: false});
+        document.addEventListener('touchmove', drag, {passive: false});
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+    }
+
+    function drag(e) {
+        if (!isDragging) return;
+        hasDragged = true;
+        e.preventDefault(); // prevent scrolling while dragging pet
+        
+        let clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        let clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+        
+        petContainer.style.left = (clientX - offsetX) + 'px';
+        petContainer.style.top = (clientY - offsetY) + 'px';
+        petContainer.style.right = 'auto'; 
+        petContainer.style.bottom = 'auto'; 
+    }
+
+    function endDrag() {
+        isDragging = false;
+        petContainer.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('touchmove', drag);
+        document.removeEventListener('mouseup', endDrag);
+        document.removeEventListener('touchend', endDrag);
+    }
+
+    petContainer.addEventListener('mousedown', startDrag);
+    petContainer.addEventListener('touchstart', startDrag, {passive: false});
+
+    // Handle normal clicks (only if user didn't drag it)
+    petContainer.addEventListener("click", (e) => {
+        if (hasDragged) {
+            hasDragged = false;
+            return;
+        }
+        petContainer.style.transform = "scale(0.9)";
+        setTimeout(() => petContainer.style.transform = "", 150);
+        animatePetReaction(phrases[Math.floor(Math.random() * phrases.length)]);
+    });
 }
