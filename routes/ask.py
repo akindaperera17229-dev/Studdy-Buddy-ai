@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
+from services.router import route_question
 from services.ai_service import generate_answer
+from services.cache import get_cache, set_cache
 from utils.validator import validate_input
 
 ask_blueprint = Blueprint('ask', __name__)
